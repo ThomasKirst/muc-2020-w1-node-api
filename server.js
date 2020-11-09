@@ -37,18 +37,16 @@ const server = http.createServer((req, res) => {
             (error) => {
               res.statusCode = error ? 500 : 200;
               const response = error ? error : energyLevel;
+              res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify(response));
             }
           );
         });
-
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(db.energy));
       }
     },
     404: () => {
       res.setHeader('Content-Type', 'text/html');
-      const errorPage = filesystem.readFileSync('404.html');
+      const errorPage = fs.readFileSync('404.html');
       res.end(errorPage);
     },
   };
