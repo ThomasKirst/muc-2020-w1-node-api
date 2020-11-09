@@ -1,5 +1,6 @@
 const http = require('http');
 const filesystem = require('fs');
+const db = require('./db.json')
 
 const hostname = '127.0.0.1';
 const port = 4000;
@@ -10,7 +11,7 @@ const server = http.createServer((req, res) => {
   const routes = {
     '/students': () => {
       res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(['Hendrik', 'Jana']));
+      res.end(JSON.stringify(db.students));
     },
     404: () => {
       res.setHeader('Content-Type', 'text/html');
