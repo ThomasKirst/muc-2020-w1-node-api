@@ -1,5 +1,6 @@
-const http = require('http');
-const fs = require('fs');
+import http from 'http';
+import fs from 'fs';
+
 const db = require('./db.json');
 const { v4: uuidv4 } = require('uuid');
 
@@ -10,6 +11,25 @@ const server = http.createServer((req, res) => {
   const { url, method } = req; // method GET | POST | PUT | DELETE
 
   const routes = {
+    '/users': () => {
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+      );
+      if (req.method === 'OPTIONS') {
+        res.statusCode = 200;
+        res.end();
+      } else if (req.method === 'POST') {
+        let bodyString = '';
+        req.on('data', (chunk) => (bodyString += chunk));
+        req.on('end', () => {
+          const body = JSON.parse(bodyString);
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ ...body, id: uuidv4() }));
+        });
+      }
+    },
     '/students': () => {
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify(db.students));
